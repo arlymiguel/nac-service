@@ -1,7 +1,7 @@
 # nac-service
 
 # Requeriments
-mysql docker container 
+mysql docker container:
 docker run --name=mysqlnac -p 3306:3306 --restart on-failure -e MYSQL_ROOT_PASSWORD=admin -d mysql
 
 # swagger link
