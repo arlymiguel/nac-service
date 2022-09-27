@@ -9,10 +9,15 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
 
 @Tag("unit")
 @ExtendWith(MockitoExtension.class)
@@ -64,7 +69,7 @@ public class NaceServiceTest {
 
     @Test
     @DisplayName("When requested a Nace by Order, it will be returned it")
-    void findByOrderNace_Test() {
+    void findByOrder_Test() {
         String order = "aa";
 
         Nace nace = Nace.builder().order("aa").level("bb").code("cc").parent("dd")
@@ -77,7 +82,51 @@ public class NaceServiceTest {
         Assertions.assertNotNull(naceFound);
     }
 
+    @Test
+    @DisplayName("When requested a Nace by Id, it will be returned it")
+    void findById_Test() {
+        String order = "aa";
 
+        Nace nace = Nace.builder().order("aa").level("bb").code("cc").parent("dd")
+                .description("ee").include("ff").rulings("gg").exclude("hh").reference("ii").build();
+        Optional<Nace> naceOptional = Optional.of(nace);
+
+        when(naceRepository.findById(1L)).thenReturn(naceOptional);
+
+        NaceDto naceFound = naceService.findById(1L);
+        Assertions.assertNotNull(naceFound);
+    }
+
+    @Test
+    @DisplayName("When requeste all NACE, it return all of them")
+    void findAll_Test() {
+
+        Nace nace = Nace.builder().order("aa").level("bb").code("cc").parent("dd")
+                .description("ee").include("ff").rulings("gg").exclude("hh").reference("ii").build();
+
+        List<Nace> naceList = new ArrayList<>();
+        naceList.add(nace);
+        when(naceRepository.findAll()).thenReturn(naceList);
+
+        List<NaceDto> naceDtoList = naceService.findAll();
+        Assertions.assertNotNull(naceDtoList);
+    }
+
+    @Test
+    @DisplayName("When requested to delte a Nace by Id, it will be removed")
+    void deleteById_Test() {
+
+        Nace nace = Nace.builder().order("aa").level("bb").code("cc").parent("dd")
+                .description("ee").include("ff").rulings("gg").exclude("hh").reference("ii").build();
+        Optional<Nace> naceOptional = Optional.of(nace);
+
+        when(naceRepository.findById(1L)).thenReturn(naceOptional);
+        doNothing().when(naceRepository).deleteById(1L);
+
+        naceService.removeById(1L);
+
+        verify(naceRepository, times(1)).deleteById(1L);
+    }
 
 
 }
