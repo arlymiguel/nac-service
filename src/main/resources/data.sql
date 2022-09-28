@@ -1,1 +1,1 @@
-insert into `naces` (`order`, `description`, `exclude`, `include`, `level`, `code`, `parent`, `reference`, `rulings`) values ('398481','1','A','cc','AGRICULTURE, FORESTRY AND FISHING','This section ...habitats.','aa','bb','A')
+insert into `nace` (`order`, `description`, `exclude`, `include`, `level`, `code`, `parent`, `reference`, `rulings`) values ('398481','1','A','cc','AGRICULTURE, FORESTRY AND FISHING','This section ...habitats.','aa','bb','A')
