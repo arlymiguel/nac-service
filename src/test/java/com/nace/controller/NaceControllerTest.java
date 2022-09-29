@@ -67,7 +67,7 @@ public class NaceControllerTest {
 
         mockMvc.perform(get("/api/v1/nace/12")
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNoContent());
+                .andExpect(status().isNotFound());
 
     }
 

@@ -40,11 +40,11 @@ public class RestExceptionHandler {
     }
 
     @ExceptionHandler(value = NoContentException.class)
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorMessage noContentException(NoContentException e, WebRequest request) {
         log.error("{}", e);
         return new ErrorMessage(
-                HttpStatus.NO_CONTENT.value(),
+                HttpStatus.NOT_FOUND.value(),
                 e.getMessage(),
                 request.getDescription(false));
     }
