@@ -5,7 +5,7 @@ mysql docker container:
 docker run --name=mysqlnac -p 3306:3306 --restart on-failure -e MYSQL_ROOT_PASSWORD=admin -d mysql
 
 # swagger link
-http://localhost:8080/swagger-ui.html#/nace-controller
+http://localhost:8080/swagger-ui/index.html
 
 # POST CURL
 curl --location --request POST 'http://localhost:8080/api/v1/nace' \
