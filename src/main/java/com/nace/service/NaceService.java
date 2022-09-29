@@ -1,11 +1,17 @@
 package com.nace.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.fge.jsonpatch.JsonPatch;
+import com.github.fge.jsonpatch.JsonPatchException;
 import com.nace.dto.NaceDto;
 import com.nace.entity.Nace;
 import com.nace.exception.NoContentException;
 import com.nace.mapper.NaceMapper;
 import com.nace.repository.NaceRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,6 +22,8 @@ import java.util.Optional;
 public class NaceService {
 
     private final NaceRepository naceRepository;
+
+    private final ObjectMapper objectMapper;
 
     public NaceDto save(NaceDto naceDto) {
         return NaceMapper.INSTANCE.toNaceDto( naceRepository.save( NaceMapper.INSTANCE.toNace(naceDto) ) );
@@ -69,6 +77,31 @@ public class NaceService {
         } else {
             throw new NoContentException("Nace is not present");
         }
+    }
+
+    @SneakyThrows
+    public NaceDto updatePartially(Long id, JsonPatch patch) {
+
+        try {
+            Optional<Nace> nace = naceRepository.findById(id);
+            if (nace.isPresent()) {
+                Nace naceDtoPatched = applyPatchToNace(patch, nace.get());
+                Nace naceUpdated = naceRepository.save(naceDtoPatched);
+                return NaceMapper.INSTANCE.toNaceDto(naceUpdated);
+            } else {
+                throw new NoContentException("Nace is not present");
+            }
+        } catch (JsonPatchException | JsonProcessingException e) {
+            throw e;
+        }
+    }
+
+    private Nace applyPatchToNace(
+            JsonPatch patch, Nace targetNace) throws JsonPatchException, JsonProcessingException {
+
+        JsonNode patched = patch.apply(objectMapper.convertValue(targetNace, JsonNode.class));
+        return objectMapper.treeToValue(patched, Nace.class);
+
     }
 
 }
