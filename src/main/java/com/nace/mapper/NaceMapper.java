@@ -20,6 +20,8 @@ public interface NaceMapper {
 
     List<NaceDto> toNaceDtoList(List<Nace> naceList);
 
+    List<Nace> toNaceList(List<NaceDto> naceList);
+
     @Named("getNace")
     default Nace getNace(Nace nac) {
         return Nace.builder()

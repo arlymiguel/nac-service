@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -84,6 +85,10 @@ public class NaceController {
         naceService.removeById(id);
     }
 
-
+    @Operation(summary = "Upload a file to bulk Nace data")
+    @PostMapping("/upload")
+    public void uploadFile(@RequestParam("file") MultipartFile file) {
+        naceService.uploadFile(file);
+    }
 
 }

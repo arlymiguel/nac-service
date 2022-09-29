@@ -35,7 +35,6 @@ public class NaceServiceTest {
 
     @BeforeEach
     void init() {
-        naceService = new NaceService(naceRepository, objectMapper);
     }
 
 
@@ -102,6 +101,7 @@ public class NaceServiceTest {
     }
 
     @Test
+
     @DisplayName("When requested a Nace by Id that is not present in database, it will throw an error")
     void findById_No_Content_Test() {
         when(naceRepository.findById(12L)).thenThrow(NoContentException.class);

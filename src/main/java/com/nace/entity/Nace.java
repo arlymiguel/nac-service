@@ -3,6 +3,7 @@ package com.nace.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
 
 @Entity
 @Table(name = "nace")
@@ -32,13 +33,13 @@ public class Nace {
     @Column(name="description")
     private String description;
 
-    @Column(name="include")
+    @Column(name="include", length = Integer.MAX_VALUE)
     private String include;
 
-    @Column(name="rulings")
+    @Column(name="rulings", length = Integer.MAX_VALUE)
     private String rulings;
 
-    @Column(name="exclude")
+    @Column(name="exclude", length = Integer.MAX_VALUE)
     private String exclude;
 
     @Column(name="reference")

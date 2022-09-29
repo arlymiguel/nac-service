@@ -10,10 +10,13 @@ import com.nace.entity.Nace;
 import com.nace.exception.NoContentException;
 import com.nace.mapper.NaceMapper;
 import com.nace.repository.NaceRepository;
+import com.nace.util.CSVHelper;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -104,4 +107,29 @@ public class NaceService {
 
     }
 
+    @SneakyThrows
+    public void uploadFile(MultipartFile file) {
+        String message = "";
+
+        if (CSVHelper.hasCSVFormat(file)) {
+            try {
+                saveFromFile(file);
+
+                message = "Uploaded the file successfully: " + file.getOriginalFilename();
+            } catch (Exception e) {
+                message = "Could not upload the file: " + file.getOriginalFilename() + "!";
+                throw e;
+            }
+        }
+    }
+
+    private void saveFromFile(MultipartFile file) {
+        try {
+            List<NaceDto> naceDtoList = CSVHelper.csvToNaceDto(file.getInputStream());
+            List<Nace> naceList = NaceMapper.INSTANCE.toNaceList(naceDtoList);
+            naceRepository.saveAll(naceList);
+        } catch (IOException e) {
+            throw new RuntimeException("fail to store csv data: " + e.getMessage());
+        }
+    }
 }
