@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Tag("integration")
@@ -57,6 +58,16 @@ public class NaceControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(naceJSONFormat))
                 .andExpect(status().isOk());
+
+    }
+
+    @Test
+    @DisplayName("When you try to find by an Id that is not present in database it will throw an exception")
+    void findById_Error_Test() throws Exception {
+
+        mockMvc.perform(get("/api/v1/nace/12")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
 
     }
 

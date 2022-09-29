@@ -1,7 +1,9 @@
 package com.nace.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nace.dto.NaceDto;
 import com.nace.entity.Nace;
+import com.nace.exception.NoContentException;
 import com.nace.repository.NaceRepository;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.times;
@@ -24,12 +27,15 @@ public class NaceServiceTest {
     @Mock
     private NaceRepository naceRepository;
 
+    @Mock
+    private ObjectMapper objectMapper;
+
     @InjectMocks
     private NaceService naceService;
 
     @BeforeEach
     void init() {
-        naceService = new NaceService(naceRepository);
+        naceService = new NaceService(naceRepository, objectMapper);
     }
 
 
@@ -93,6 +99,16 @@ public class NaceServiceTest {
 
         NaceDto naceFound = naceService.findById(1L);
         Assertions.assertNotNull(naceFound);
+    }
+
+    @Test
+    @DisplayName("When requested a Nace by Id that is not present in database, it will throw an error")
+    void findById_No_Content_Test() {
+        when(naceRepository.findById(12L)).thenThrow(NoContentException.class);
+
+        Exception exception = assertThrows(NoContentException.class, () -> {
+           naceService.findById(12L);
+        });
     }
 
     @Test
